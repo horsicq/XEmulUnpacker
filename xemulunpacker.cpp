@@ -340,7 +340,7 @@ static QByteArray guCaptureImageBytes(XEmuMemoryManager *pMemoryManager, quint64
 // reaches the already-known OEP (nBase2 + nOepRva), then capture the unpacked image. Returns an
 // empty buffer if the override did not take (image not relocatable) or the OEP was not reached.
 static QByteArray guCaptureAtBase(const QString &sFileName, XEmuEmulator::OPTIONS emuOpt, quint64 nBase2, quint64 nOepRva, quint64 nImageSize,
-                                  qint64 nMaxSteps, const std::atomic_bool *pStopFlag)
+                                  qint64 nMaxSteps, XBinary::PDSTRUCT *pPdStruct)
 {
     emuOpt.nImageBaseOverride = nBase2;
 
@@ -358,7 +358,7 @@ static QByteArray guCaptureAtBase(const QString &sFileName, XEmuEmulator::OPTION
     const quint64 nTargetOEP = nBase2 + nOepRva;
 
     for (qint64 nSteps = 0; nSteps < nMaxSteps; nSteps++) {
-        if (pStopFlag && pStopFlag->load()) {
+        if (XBinary::isPdStructStopped(pPdStruct)) {
             return QByteArray();
         }
         if ((quint64)pArch->getPC(pRegs) == nTargetOEP) {
@@ -997,18 +997,24 @@ XEmulUnpacker::OPTIONS XEmulUnpacker::getDefaultOptions() const
     return OPTIONS();
 }
 
-void XEmulUnpacker::setStopFlag(const std::atomic_bool *pStopFlag)
+void XEmulUnpacker::reportInfo(const QString &sText)
 {
-    m_pStopFlag = pStopFlag;
+    if (m_pPdStruct) {
+        XBinary::setPdStructInfoString(m_pPdStruct, sText);
+        XBinary::invokePdStructCallback(m_pPdStruct, 0);
+    }
 }
 
 XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName)
 {
-    return unpack(sFileName, getDefaultOptions());
+    XBinary::PDSTRUCT pdStruct = XBinary::createPdStruct();
+    return unpack(sFileName, getDefaultOptions(), &pdStruct);
 }
 
-XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTIONS &options)
+XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct)
 {
+    m_pPdStruct = pPdStruct;
+
     RESULT result;
     result.sReason = QStringLiteral("not started");
 
@@ -1058,7 +1064,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
     if (options.bCaptureApiLog) {
         connect(&emu, &XEmuEmulator::infoMessage, this, GU_ApiLogFilter{&result.listApiLog, options.nMaxApiLog});
     }
-    connect(&emu, &XEmuEmulator::errorMessage, this, &XEmulUnpacker::infoMessage);
+    connect(&emu, &XEmuEmulator::errorMessage, this, &XEmulUnpacker::reportInfo);
 
     if (!emu.loadFile(sFileName, emuOpt)) {
         result.sReason = QStringLiteral("loadFile failed");
@@ -1126,7 +1132,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
     const int nPtr = mainModule.bIs64 ? 8 : 4;  // IAT slot / thunk width
     pMM->setWriteCallback(GU_DirtyPageWatcher{&setDirtyPages, nImageBase, nImageSize, nPageMask, &mapIatSlots, nStubBase, nStubLimit, nPtr});
 
-    emit infoMessage(tr("Running stub from 0x%1 (entry section 0x%2-0x%3)").arg(nStartPC, 0, 16).arg(nEpStart, 0, 16).arg(nEpEnd, 0, 16));
+    reportInfo(tr("Running stub from 0x%1 (entry section 0x%2-0x%3)").arg(nStartPC, 0, 16).arg(nEpStart, 0, 16).arg(nEpEnd, 0, 16));
 
     qint64 nSteps = 0;
     bool bOep = false;
@@ -1224,7 +1230,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                     pMM->write(nThunk, baThunk);
                     pArch->setPC(pRegs, nThunk);
                     bTlsCallbacksRun = true;
-                    emit infoMessage(tr("TLS: running %1 callback(s) before entry (thunk @ 0x%2)").arg(listCb.size()).arg(nThunk, 0, 16));
+                    reportInfo(tr("TLS: running %1 callback(s) before entry (thunk @ 0x%2)").arg(listCb.size()).arg(nThunk, 0, 16));
                 }
             }
         }
@@ -1232,7 +1238,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
 
     for (; nSteps < options.nMaxSteps; nSteps++) {
         // Cooperative cancellation (polled cheaply, not every single instruction).
-        if (m_pStopFlag && ((nSteps & 0x3FFF) == 0) && m_pStopFlag->load(std::memory_order_relaxed)) {
+        if (((nSteps & 0x3FFF) == 0) && XBinary::isPdStructStopped(m_pPdStruct)) {
             result.sReason = QStringLiteral("cancelled after %1 steps").arg(nSteps);
             break;
         }
@@ -1295,10 +1301,6 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             nOepAbs = nWtePendingOep;
             result.sMethod = QStringLiteral("write-then-execute");
             break;
-        }
-
-        if ((options.nProgressInterval > 0) && (nSteps > 0) && ((nSteps % options.nProgressInterval) == 0)) {
-            emit progress(nSteps, nPC, setDirtyPages.size());
         }
 
         XEmuArch::STEP_INFO si = emu.step();
@@ -1560,7 +1562,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 result.nSections = p[44] | (p[45] << 8);
             }
             result.nOEP = nEntry;
-            emit oepDetected(result.nOEP, result.sMethod);
+            reportInfo(tr("OEP detected: RVA 0x%1 (%2)").arg(result.nOEP, 0, 16).arg(result.sMethod));
         }
 
         result.sReason = QStringLiteral("unpacked ELF reconstructed via execve (%1 bytes, entry 0x%2) after %3 steps")
@@ -1586,7 +1588,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             result.nSections = nSegs;
             result.nOEP = nMemEntry;
             result.bSuccess = true;
-            emit oepDetected(result.nOEP, result.sMethod);
+            reportInfo(tr("OEP detected: RVA 0x%1 (%2)").arg(result.nOEP, 0, 16).arg(result.sMethod));
             result.sReason = QStringLiteral("unpacked ELF rebuilt from memory (%1 bytes, entry 0x%2, %3 segment(s)) after %4 steps")
                                  .arg(baElf.size())
                                  .arg(result.nOEP, 0, 16)
@@ -1613,7 +1615,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
     }
 
     result.nOEP = nOepAbs - nImageBase;
-    emit oepDetected(result.nOEP, result.sMethod);
+    reportInfo(tr("OEP detected: RVA 0x%1 (%2)").arg(result.nOEP, 0, 16).arg(result.sMethod));
 
     if (bMachO) {
         // Default the CPU type for a universal-binary input from the loaded slice.
@@ -1728,13 +1730,13 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 const quint64 nDelta = 0x10000000ULL;
                 const quint64 nBase2 = nImageBase + nDelta;
                 QByteArray img1 = guCaptureImageBytes(pMM, nImageBase, nImageSize);
-                QByteArray img2 = guCaptureAtBase(sFileName, emuOpt, nBase2, result.nOEP, nImageSize, options.nMaxSteps, m_pStopFlag);
+                QByteArray img2 = guCaptureAtBase(sFileName, emuOpt, nBase2, result.nOEP, nImageSize, options.nMaxSteps, m_pPdStruct);
                 if (!img1.isEmpty() && (img1.size() == img2.size())) {
                     const QList<quint32> listRelocRvas = guDiffRelocs(img1, img2, nDelta, mainModule.bIs64);
                     baRelocBlob = guBuildRelocBlob(listRelocRvas, mainModule.bIs64);
-                    emit infoMessage(tr("Reconstructed %1 base relocation(s)").arg(listRelocRvas.size()));
+                    reportInfo(tr("Reconstructed %1 base relocation(s)").arg(listRelocRvas.size()));
                 } else {
-                    emit infoMessage(tr("Relocation reconstruction skipped (second-base run did not reach OEP)"));
+                    reportInfo(tr("Relocation reconstruction skipped (second-base run did not reach OEP)"));
                 }
             }
         }
@@ -1758,5 +1760,6 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
 XEmulUnpacker::RESULT XEmulUnpacker::unpackFile(const QString &sFileName, const OPTIONS &options)
 {
     XEmulUnpacker unpacker;
-    return unpacker.unpack(sFileName, options);
+    XBinary::PDSTRUCT pdStruct = XBinary::createPdStruct();
+    return unpacker.unpack(sFileName, options, &pdStruct);
 }

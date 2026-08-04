@@ -27,8 +27,7 @@
 #include <QString>
 #include <QStringList>
 
-#include <atomic>
-
+#include "xbinary.h"
 #include "xemuemulator.h"
 
 // Generic, packer-agnostic emulation unpacker.
@@ -45,10 +44,11 @@
 // leaving the entry section into another part of the image) is kept as a fallback
 // for stubs whose OEP page our write tracking did not cover.
 //
-// The class is stateful and emits progress/diagnostic signals, so a GUI front end
-// can drive it and show what the stub is doing (including the emulated Windows-API
-// calls it makes). It is packer-agnostic: it works for any stub the CPU core can
-// execute up to the OEP transfer (UPX, ASPack, FSG, MEW, Petite, ...).
+// The class is stateful and reports progress/diagnostics through the caller's
+// XBinary::PDSTRUCT (status lines via the info string + callback; cancellation via
+// isPdStructStopped), so a GUI front end can drive it, stream what the stub is doing
+// and stop it. It is packer-agnostic: it works for any stub the CPU core can execute
+// up to the OEP transfer (UPX, ASPack, FSG, MEW, Petite, ...).
 class XEmulUnpacker : public QObject {
     Q_OBJECT
 
@@ -62,7 +62,7 @@ public:
         QString sSystemRoot;       // directory searched for dependency modules
         bool bDetectWriteExec;     // enable OEP detection (cross-section transfer into written memory)
         bool bDetectSectionHop;    // last-resort fallback: accept a cross-section transfer into raw memory too
-        qint64 nProgressInterval;  // emit progress() every N steps (0 disables)
+        qint64 nProgressInterval;  // reserved (progress heartbeat interval; currently unused)
         bool bCaptureApiLog;       // record emulated Windows-API calls in the result
         int nMaxApiLog;            // cap on captured API-log lines
 
@@ -176,23 +176,18 @@ public:
     // single-argument unpack() overload runs with these.
     virtual OPTIONS getDefaultOptions() const;
 
-    RESULT unpack(const QString &sFileName, const OPTIONS &options);
-    // Unpack using this unpacker's getDefaultOptions() (packer-tuned in subclasses).
+    // Progress + diagnostics flow through pPdStruct: status lines via the info string
+    // (streamed through the PDSTRUCT callback), cancellation via isPdStructStopped() --
+    // the stepping loop polls it and stops promptly (reason "cancelled") when set. The
+    // PDSTRUCT is owned by the caller (e.g. a GUI worker thread), so another thread can
+    // request a stop while unpack() runs. Pass a valid PDSTRUCT (createPdStruct()).
+    RESULT unpack(const QString &sFileName, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct);
+    // Unpack using this unpacker's getDefaultOptions() (packer-tuned in subclasses), with a
+    // throwaway PDSTRUCT (no progress/cancellation).
     RESULT unpack(const QString &sFileName);
 
-    // Cooperative cancellation. The stepping loop polls this flag; when it becomes
-    // true the run stops promptly (reason "cancelled"). The flag is owned by the
-    // caller (e.g. a GUI worker thread) so another thread can request a stop while
-    // unpack() runs. Pass nullptr (the default) to disable cancellation.
-    void setStopFlag(const std::atomic_bool *pStopFlag);
-
-    // Convenience one-shot for callers that do not need signals.
+    // Convenience one-shot for callers that do not need progress/cancellation.
     static RESULT unpackFile(const QString &sFileName, const OPTIONS &options = OPTIONS());
-
-signals:
-    void infoMessage(const QString &sText);
-    void progress(qint64 nSteps, quint64 nCurrentAddress, int nWrittenPages);
-    void oepDetected(quint64 nOepRva, const QString &sMethod);
 
 protected:
     // Decide whether the control transfer described by ctx is the stub's hand-off to
@@ -211,8 +206,14 @@ protected:
                                      quint64 nImageBase, quint64 nImageSize) const;
 
 private:
-    // Optional caller-owned cancellation flag polled by the stepping loop (nullptr = none).
-    const std::atomic_bool *m_pStopFlag = nullptr;
+    // Caller-owned progress/cancellation struct for the current unpack() run (set at its
+    // start; nullptr outside a run). Status is reported through it and the stepping loop
+    // polls it for cancellation.
+    XBinary::PDSTRUCT *m_pPdStruct = nullptr;
+
+    // Report a diagnostic line: set it as the PDSTRUCT info string and fire the callback
+    // (unthrottled) so a front end can stream it live. No-op without a PDSTRUCT.
+    void reportInfo(const QString &sText);
 
 
     // Rebuild the original ELF from the decompressed image the stub laid out in
