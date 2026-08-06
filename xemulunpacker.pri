@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_armadillo.h \
     $$PWD/packers/xemulunpacker_nspack.h \
     $$PWD/packers/xemulunpacker_winupack.h \
+    $$PWD/packers/xemulunpacker_fatpack.h \
     $$PWD/packers/xemulunpacker_fsg.h \
     $$PWD/packers/xemulunpacker_mew.h \
     $$PWD/packers/xemulunpacker_mpress.h \
@@ -44,6 +45,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_armadillo.cpp \
     $$PWD/packers/xemulunpacker_nspack.cpp \
     $$PWD/packers/xemulunpacker_winupack.cpp \
+    $$PWD/packers/xemulunpacker_fatpack.cpp \
     $$PWD/packers/xemulunpacker_fsg.cpp \
     $$PWD/packers/xemulunpacker_mew.cpp \
     $$PWD/packers/xemulunpacker_mpress.cpp \

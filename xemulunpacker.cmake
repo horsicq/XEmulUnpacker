@@ -40,6 +40,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_nspack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_winupack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_winupack.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_fatpack.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_fatpack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_fsg.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_fsg.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_mew.cpp
