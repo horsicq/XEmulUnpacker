@@ -37,7 +37,8 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_petite.h \
     $$PWD/packers/xemulunpacker_pepacker_levanvn.h \
     $$PWD/packers/xemulunpacker_revprot.h \
-    $$PWD/packers/xemulunpacker_themida.h 
+    $$PWD/packers/xemulunpacker_themida.h \
+    $$PWD/packers/xemulunpacker_tinyload.h
 
 SOURCES += \
     $$PWD/xemulunpacker.cpp \
@@ -73,7 +74,8 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_petite.cpp \
     $$PWD/packers/xemulunpacker_pepacker_levanvn.cpp \
     $$PWD/packers/xemulunpacker_revprot.cpp \
-    $$PWD/packers/xemulunpacker_themida.cpp
+    $$PWD/packers/xemulunpacker_themida.cpp \
+    $$PWD/packers/xemulunpacker_tinyload.cpp
 
 DISTFILES += \
     $$PWD/xemulunpacker.cmake

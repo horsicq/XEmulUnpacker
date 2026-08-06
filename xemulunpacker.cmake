@@ -92,6 +92,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_themida.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_themida.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_tinyload.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_tinyload.h
 )
 
 endif()
