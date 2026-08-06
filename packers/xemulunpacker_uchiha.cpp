@@ -32,8 +32,8 @@ QString XEmulUnpackerUchiha::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerUchiha::getDefaultOptions() const
 {
     OPTIONS options;
-    // aPLib decompression is highly optimized and fast compared to LZMA/XTEA.
-    // 10,000,000 steps are completely sufficient for unpacking and IAT rebuilding.
+    // aPLib decompression and dynamic IAT resolving loops.
+    // 10,000,000 steps are completely sufficient for this lightweight logic.
     options.nMaxSteps = 10000000; 
     return options;
 }
@@ -47,30 +47,19 @@ bool XEmulUnpackerUchiha::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options)
         return false;
     }
 
-    // The stack must be perfectly balanced after context restoration (POPAD).
-    // This is the strongest indicator that the packer stub has finished its work.
-    if (c.nSpDelta != 0) {
-        return false;
-    }
+    // Uchiha generates the final JMP dynamically via C++ after resolving the IAT.
+    // The exact generated sequence before the final jump is:
+    // 80 B9 XX XX XX XX 00   -> CMP BYTE PTR DS:[posName + ECX], 0
+    // 0F 85 XX XX XX XX      -> JNE (6 bytes)
+    // E9 XX XX XX XX         -> JMP OEP (5 bytes)
 
-    // Classic Tail Jumps used in simple 32-bit PE packers (pushad -> aPLib -> popad -> jmp)
-
-    // Pattern 1: Standard 5-byte relative jump (E9) to the OEP.
-    if ((c.nPrevSize == 5) && (c.prev8() == 0xE9)) {
-        return true;
-    }
-
-    // Pattern 2: 'push imm32' (68) followed by 'ret' (C3).
-    if ((c.nPrevSize == 1) && (c.prev8() == 0xC3)) {
-        if (c.matchSignature(c.nPrevAddress - 5, "68........")) {
+    // Check if the current instruction is the 5-byte relative JMP to OEP
+    if (c.nPrevSize == 5 && c.prev8() == 0xE9) {
+        
+        // Look exactly 6 bytes backwards to see if it was preceded by the JNE
+        if (c.matchSignature(c.nPrevAddress - 6, "0F85")) {
             return true;
         }
-    }
-
-    // Pattern 3: Indirect jump via 32-bit register (jmp eax, jmp ecx, jmp edx, etc.)
-    // Opcodes: FF E0 to FF E7 -> Little Endian: 0xE0FF to 0xE7FF
-    if ((c.nPrevSize == 2) && (c.prev16() >= 0xE0FF && c.prev16() <= 0xE7FF)) {
-        return true;
     }
 
     return false;
