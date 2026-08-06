@@ -64,6 +64,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_alushpacker.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_beroexepacker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_beroexepacker.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_eronana.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_eronana.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_exefog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_exefog.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_npack.cpp

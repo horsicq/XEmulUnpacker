@@ -24,6 +24,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_ahpacker.h \
     $$PWD/packers/xemulunpacker_alushpacker.h \
     $$PWD/packers/xemulunpacker_beroexepacker.h \
+    $$PWD/packers/xemulunpacker_eronana.h \
     $$PWD/packers/xemulunpacker_exefog.h \
     $$PWD/packers/xemulunpacker_npack.h \
     $$PWD/packers/xemulunpacker_fishpepacker.h \
@@ -59,6 +60,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_ahpacker.cpp \
     $$PWD/packers/xemulunpacker_alushpacker.cpp \
     $$PWD/packers/xemulunpacker_beroexepacker.cpp \
+    $$PWD/packers/xemulunpacker_eronana.cpp \
     $$PWD/packers/xemulunpacker_exefog.cpp \
     $$PWD/packers/xemulunpacker_npack.cpp \
     $$PWD/packers/xemulunpacker_fishpepacker.cpp \
