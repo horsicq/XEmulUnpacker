@@ -70,6 +70,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_packman.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_quickpacknt.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_quickpacknt.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pespin.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pespin.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_petite.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_petite.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.cpp
