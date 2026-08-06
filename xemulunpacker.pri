@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/xemulunpacker.h \
     $$PWD/xemuunpack.h \
     $$PWD/xemulunpackerfactory.h \
+    $$PWD/packers/xemulunpacker_uchiha.h \
     $$PWD/packers/xemulunpacker_upx.h \
     $$PWD/packers/xemulunpacker_aspack.h \
     $$PWD/packers/xemulunpacker_armadillo.h \
@@ -41,6 +42,7 @@ SOURCES += \
     $$PWD/xemulunpacker.cpp \
     $$PWD/xemuunpack.cpp \
     $$PWD/xemulunpackerfactory.cpp \
+    $$PWD/packers/xemulunpacker_uchiha.cpp \
     $$PWD/packers/xemulunpacker_upx.cpp \
     $$PWD/packers/xemulunpacker_aspack.cpp \
     $$PWD/packers/xemulunpacker_armadillo.cpp \

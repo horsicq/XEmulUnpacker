@@ -30,6 +30,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/xemuunpack.h
     ${CMAKE_CURRENT_LIST_DIR}/xemulunpackerfactory.cpp
     ${CMAKE_CURRENT_LIST_DIR}/xemulunpackerfactory.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_uchiha.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_uchiha.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_upx.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_upx.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_aspack.cpp
