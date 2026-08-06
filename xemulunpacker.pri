@@ -9,6 +9,7 @@ HEADERS += \
     $$PWD/xemulunpackerfactory.h \
     $$PWD/packers/xemulunpacker_upx.h \
     $$PWD/packers/xemulunpacker_aspack.h \
+    $$PWD/packers/xemulunpacker_armadillo.h \
     $$PWD/packers/xemulunpacker_nspack.h \
     $$PWD/packers/xemulunpacker_winupack.h \
     $$PWD/packers/xemulunpacker_fsg.h \
@@ -27,7 +28,8 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_packman.h \
     $$PWD/packers/xemulunpacker_quickpacknt.h \
     $$PWD/packers/xemulunpacker_petite.h \
-    $$PWD/packers/xemulunpacker_revprot.h
+    $$PWD/packers/xemulunpacker_revprot.h \
+    $$PWD/packers/xemulunpacker_themida.h 
 
 SOURCES += \
     $$PWD/xemulunpacker.cpp \
@@ -35,6 +37,7 @@ SOURCES += \
     $$PWD/xemulunpackerfactory.cpp \
     $$PWD/packers/xemulunpacker_upx.cpp \
     $$PWD/packers/xemulunpacker_aspack.cpp \
+    $$PWD/packers/xemulunpacker_armadillo.cpp \
     $$PWD/packers/xemulunpacker_nspack.cpp \
     $$PWD/packers/xemulunpacker_winupack.cpp \
     $$PWD/packers/xemulunpacker_fsg.cpp \
@@ -53,7 +56,8 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_packman.cpp \
     $$PWD/packers/xemulunpacker_quickpacknt.cpp \
     $$PWD/packers/xemulunpacker_petite.cpp \
-    $$PWD/packers/xemulunpacker_revprot.cpp
+    $$PWD/packers/xemulunpacker_revprot.cpp \
+    $$PWD/packers/xemulunpacker_themida.cpp
 
 DISTFILES += \
     $$PWD/xemulunpacker.cmake

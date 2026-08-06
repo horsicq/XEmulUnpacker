@@ -34,6 +34,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_upx.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_aspack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_aspack.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_armadillo.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_armadillo.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_nspack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_nspack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_winupack.cpp
@@ -72,6 +74,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_petite.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_themida.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_themida.h
 )
 
 endif()
