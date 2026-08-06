@@ -29,6 +29,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_quickpacknt.h \
     $$PWD/packers/xemulunpacker_pespin.h \
     $$PWD/packers/xemulunpacker_petite.h \
+    $$PWD/packers/xemulunpacker_pepacker_levanvn.h \
     $$PWD/packers/xemulunpacker_revprot.h \
     $$PWD/packers/xemulunpacker_themida.h 
 
@@ -58,6 +59,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_quickpacknt.cpp \
     $$PWD/packers/xemulunpacker_pespin.cpp \
     $$PWD/packers/xemulunpacker_petite.cpp \
+    $$PWD/packers/xemulunpacker_pepacker_levanvn.cpp \
     $$PWD/packers/xemulunpacker_revprot.cpp \
     $$PWD/packers/xemulunpacker_themida.cpp
 
