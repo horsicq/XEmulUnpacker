@@ -18,19 +18,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef XEMULUNPACKER_PUNKIEPIE_H
-#define XEMULUNPACKER_PUNKIEPIE_H
+#ifndef XEMULUNPACKER_PINKIEPIE_H
+#define XEMULUNPACKER_PINKIEPIE_H
 
 #include "xemulunpacker.h"
 
-class XEmulUnpackerPunkiePie : public XEmulUnpacker {
+class XEmulUnpackerPinkiePie : public XEmulUnpacker {
     Q_OBJECT
 public:
-    explicit XEmulUnpackerPunkiePie(QObject *pParent = nullptr);
+    explicit XEmulUnpackerPinkiePie(QObject *pParent = nullptr);
 
     QString getPackerName() const override;
     OPTIONS getDefaultOptions() const override;
     bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_PUNKIEPIE_H
+#endif // XEMULUNPACKER_PINKIEPIE_H
