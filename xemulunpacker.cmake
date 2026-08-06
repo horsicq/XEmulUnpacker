@@ -70,6 +70,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_eronana.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_exefog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_exefog.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_neolite.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_neolite.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_npack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_npack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_fishpepacker.cpp
@@ -96,7 +98,7 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_themida.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_tinyload.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_tinyload.h
-        ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_xorpacker.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_xorpacker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_xorpacker.h
 
 )
