@@ -145,12 +145,13 @@ public:
         qint64 nSteps;           // instructions executed so far
         quint64 nImageBase;
         quint64 nImageSize;
+        bool bIs64;              // guest image is 64-bit (mirrors the main module's bitness)
         XEmuMemoryManager *pMemoryManager;  // for predicates that inspect bytes around prev
 
         OEP_CONTEXT()
             : nPrevAddress(0), nPrevSize(0), nCurrAddress(0), nSpDelta(0), bJumpFromHigh(false), bJumpToHigh(false), bJumpFromHeader(false),
               bPrevIsImage(false), bCurrIsImage(false), bPrevIsHeap(false), bDirtyTarget(false), nSteps(0), nImageBase(0), nImageSize(0),
-              pMemoryManager(nullptr)
+              bIs64(false), pMemoryManager(nullptr)
         {
         }
 

@@ -58,8 +58,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_exepack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pex.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pex.h
-    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_punkiepie.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_punkiepie.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pinkiepie.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pinkiepie.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_ahpacker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_ahpacker.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_alushpacker.cpp

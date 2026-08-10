@@ -1460,6 +1460,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 ctx.nSteps = nSteps;
                 ctx.nImageBase = nImageBase;
                 ctx.nImageSize = nImageSize;
+                ctx.bIs64 = mainModule.bIs64;
 
                 // Heap = a committed region outside the image that is not the stack region.
                 ctx.bPrevIsHeap = false;
