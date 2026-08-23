@@ -1045,7 +1045,8 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                     bMachO = true;
                     nMachCpuType = e[4] | (e[5] << 8) | (e[6] << 16) | ((quint32)e[7] << 24);
                     nMachCpuSubtype = e[8] | (e[9] << 8) | (e[10] << 16) | ((quint32)e[11] << 24);
-                } else if ((nMagic == 0xBEBAFECA) || (nMagic == 0xCAFEBABE)) {
+                } else if ((nMagic == 0xBEBAFECA) || (nMagic == 0xCAFEBABE) ||
+                           (nMagic == 0xBFBAFECA) || (nMagic == 0xCAFEBABF)) {
                     bMachO = true;  // universal binary; cputype filled in from the loaded slice below
                 }
             }
