@@ -32,7 +32,8 @@ QString XEmulUnpackerPackedInfectedPE::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPackedInfectedPE::getDefaultOptions() const
 {
     OPTIONS options;
-    // Step limit to allow anti-debug checks, CPUID VM checks, API resolution, and the XOR loop to finish.
+    // Step limit to allow anti-debug checks, CPUID VM checks, API resolution, 
+    // Shellcode MessageBox execution, and the final jump to finish.
     options.nMaxSteps = 10000000; 
     return options;
 }
@@ -40,27 +41,25 @@ XEmulUnpacker::OPTIONS XEmulUnpackerPackedInfectedPE::getDefaultOptions() const
 bool XEmulUnpackerPackedInfectedPE::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
+
+    // The packer heavily relies on 32-bit specific structures (IMAGE_NT_HEADERS32)
+    // and 32-bit inline assembly (eax, ebx, fs:0x30).
+    if (c.bIs64) {
+        return false;
+    }
     
-    // The stack must be balanced before jumping to the Original Entry Point.
-    if (c.nSpDelta != 0) {
-        return false;
-    }
+    // CRITICAL: We DO NOT check c.nSpDelta! 
+    // The stub is a standard C function that jumps away directly via inline ASM (jmp 0x12345678).
+    // It skips the C compiler's epilogue, leaving the stack frame completely imbalanced.
 
-    // The jump must lead to the original high memory / section.
-    if (!c.bJumpToHigh) {
-        return false;
-    }
+    // CRITICAL: We DO NOT check c.bJumpToHigh!
+    // The packer infects existing code caves or adds a section. The final jump returns 
+    // to the original PE section, which is part of the mapped image, not a dynamic heap.
 
-    // Pattern 1: Standard 5-byte relative jump (E9) patched via adjustUnpack for the OEP transfer.
+    // The final transfer is a standard 5-byte relative jump (E9 XX XX XX XX).
+    // The packer's adjustUnpack() function patches this jump dynamically.
     if ((c.nPrevSize == 5) && (c.prev8() == 0xE9)) {
         return true;
-    }
-
-    // Pattern 2: 'push imm32' (68) followed by 'ret' (C3).
-    if ((c.nPrevSize == 1) && (c.prev8() == 0xC3)) {
-        if (c.matchSignature(c.nPrevAddress - 5, "68........")) {
-            return true;
-        }
     }
 
     return false;
