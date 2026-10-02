@@ -49,6 +49,7 @@
 #include "packers/xemulunpacker_pinkiepie.h"
 #include "packers/xemulunpacker_quickpacknt.h"
 #include "packers/xemulunpacker_revprot.h"
+#include "packers/xemulunpacker_troglodyte9.h"
 #include "packers/xemulunpacker_themida.h"
 #include "packers/xemulunpacker_tinyload.h"
 #include "packers/xemulunpacker_uchiha.h"
@@ -103,6 +104,7 @@ const ENTRY g_entries[] = {
     {"Petite", &make<XEmulUnpackerPetite>},
     {"PE Packer by levanvn", &make<XEmulUnpackerPEPackerLevanvn>},
     {"REVProt", &make<XEmulUnpackerRevProt>},
+    {"troglodyte9", &make<XEmulUnpackerTroglodyte9>},
     {"Themida", &make<XEmulUnpackerThemida>},
     {"TinyLoad", &make<XEmulUnpackerTinyLoad>},
     {"xor-packer", &make<XEmulUnpackerXorPacker>},
