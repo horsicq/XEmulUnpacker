@@ -24,6 +24,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_pinkiepie.h \
     $$PWD/packers/xemulunpacker_ahpacker.h \
     $$PWD/packers/xemulunpacker_alushpacker.h \
+    $$PWD/packers/xemulunpacker_aniko33.h \
     $$PWD/packers/xemulunpacker_beroexepacker.h \
     $$PWD/packers/xemulunpacker_eronana.h \
     $$PWD/packers/xemulunpacker_exefog.h \
@@ -66,6 +67,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_pinkiepie.cpp \
     $$PWD/packers/xemulunpacker_ahpacker.cpp \
     $$PWD/packers/xemulunpacker_alushpacker.cpp \
+    $$PWD/packers/xemulunpacker_aniko33.cpp \
     $$PWD/packers/xemulunpacker_beroexepacker.cpp \
     $$PWD/packers/xemulunpacker_eronana.cpp \
     $$PWD/packers/xemulunpacker_exefog.cpp \
