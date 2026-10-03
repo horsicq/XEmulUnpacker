@@ -145,6 +145,7 @@ public:
         qint64 nSteps;           // instructions executed so far
         quint64 nImageBase;
         quint64 nImageSize;
+        bool bIs32;              // guest image is 32-bit (mirrors the main module's bitness)
         bool bIs64;              // guest image is 64-bit (mirrors the main module's bitness)
         XEmuMemoryManager *pMemoryManager;  // for predicates that inspect bytes around prev
 
