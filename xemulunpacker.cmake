@@ -88,6 +88,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_packedinfectedpe.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pefilepacker.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pefilepacker.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_permafrost.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_permafrost.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pespin.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pespin.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_petite.cpp

@@ -36,6 +36,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_quickpacknt.h \
     $$PWD/packers/xemulunpacker_packedinfectedpe.h \
     $$PWD/packers/xemulunpacker_pefilepacker.h \
+    $$PWD/packers/xemulunpacker_permafrost.h \
     $$PWD/packers/xemulunpacker_pespin.h \
     $$PWD/packers/xemulunpacker_petite.h \
     $$PWD/packers/xemulunpacker_pepacker_levanvn.h \
@@ -79,6 +80,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_quickpacknt.cpp \
     $$PWD/packers/xemulunpacker_packedinfectedpe.cpp \
     $$PWD/packers/xemulunpacker_pefilepacker.cpp \
+    $$PWD/packers/xemulunpacker_permafrost.cpp \
     $$PWD/packers/xemulunpacker_pespin.cpp \
     $$PWD/packers/xemulunpacker_petite.cpp \
     $$PWD/packers/xemulunpacker_pepacker_levanvn.cpp \

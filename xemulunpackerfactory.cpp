@@ -44,6 +44,7 @@
 #include "packers/xemulunpacker_pecompact.h"
 #include "packers/xemulunpacker_pefilepacker.h"
 #include "packers/xemulunpacker_pepacker_levanvn.h"
+#include "packers/xemulunpacker_permafrost.h"
 #include "packers/xemulunpacker_pespin.h"
 #include "packers/xemulunpacker_petite.h"
 #include "packers/xemulunpacker_pex.h"
@@ -102,6 +103,7 @@ const ENTRY g_entries[] = {
     {"QuickPack NT", &make<XEmulUnpackerQuickPackNT>},
     {"Packed-Infected-PE", &make<XEmulUnpackerPackedInfectedPE>},
     {"PE-File-Packer (Chronoss3)", &make<XEmulUnpackerPEFilePacker>},
+    {"permafrost", &make<XEmulUnpackerPermafrost>},
     {"PESpin", &make<XEmulUnpackerPESpin>},
     {"Petite", &make<XEmulUnpackerPetite>},
     {"PE Packer by levanvn", &make<XEmulUnpackerPEPackerLevanvn>},
