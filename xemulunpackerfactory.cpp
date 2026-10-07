@@ -20,6 +20,7 @@
  */
 #include "xemulunpackerfactory.h"
 
+#include "cryptors/xemulunpacker_permafrost.h"
 #include "packers/xemulunpacker_acprotect.h"
 #include "packers/xemulunpacker_ahpacker.h"
 #include "packers/xemulunpacker_alushpacker.h"
@@ -44,7 +45,6 @@
 #include "packers/xemulunpacker_pecompact.h"
 #include "packers/xemulunpacker_pefilepacker.h"
 #include "packers/xemulunpacker_pepacker_levanvn.h"
-#include "packers/xemulunpacker_permafrost.h"
 #include "packers/xemulunpacker_pespin.h"
 #include "packers/xemulunpacker_petite.h"
 #include "packers/xemulunpacker_pex.h"
