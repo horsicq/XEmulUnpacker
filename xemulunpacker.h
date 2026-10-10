@@ -97,8 +97,16 @@ public:
         bool bReconstructRelocs;
 
         OPTIONS()
-            : nMaxSteps(100000000), bLoadDependencies(false), bDetectWriteExec(true), bDetectSectionHop(false), nProgressInterval(1000000),
-              bCaptureApiLog(true), nMaxApiLog(4096), nOepMinStubSteps(5000), nOepDeferTailSteps(0), bReconstructImports(true),
+            : nMaxSteps(100000000),
+              bLoadDependencies(false),
+              bDetectWriteExec(true),
+              bDetectSectionHop(false),
+              nProgressInterval(1000000),
+              bCaptureApiLog(true),
+              nMaxApiLog(4096),
+              nOepMinStubSteps(5000),
+              nOepDeferTailSteps(0),
+              bReconstructImports(true),
               bReconstructRelocs(true)
         {
         }
@@ -106,15 +114,15 @@ public:
 
     struct RESULT {
         bool bSuccess;
-        quint64 nOEP;           // recovered original entry point (RVA)
+        quint64 nOEP;  // recovered original entry point (RVA)
         quint64 nImageBase;
         quint64 nImageSize;
-        qint64 nSteps;          // instructions executed
-        int nSections;          // sections written into the rebuilt image
-        int nImports;           // imports recovered into the reconstructed import table
-        QByteArray baPE;        // rebuilt PE (valid only when bSuccess)
-        QString sMethod;        // which heuristic fired ("write-then-execute" / "section-hop")
-        QString sReason;        // human-readable stop reason / diagnostics
+        qint64 nSteps;           // instructions executed
+        int nSections;           // sections written into the rebuilt image
+        int nImports;            // imports recovered into the reconstructed import table
+        QByteArray baPE;         // rebuilt PE (valid only when bSuccess)
+        QString sMethod;         // which heuristic fired ("write-then-execute" / "section-hop")
+        QString sReason;         // human-readable stop reason / diagnostics
         QStringList listApiLog;  // emulated Windows-API calls the stub made
 
         RESULT() : bSuccess(false), nOEP(0), nImageBase(0), nImageSize(0), nSteps(0), nSections(0), nImports(0)
@@ -130,29 +138,42 @@ public:
     // between memory pages. (Ported from the per-packer OEP heuristics in the
     // legacy QEmulX engine, whose "section" comparison was a page comparison.)
     struct OEP_CONTEXT {
-        quint64 nPrevAddress;    // address of the terminating instruction ("prev")
-        quint32 nPrevSize;       // its length in bytes
-        QByteArray baPrevCode;   // its opcode bytes (up to 16)
-        quint64 nCurrAddress;    // transfer target -- the OEP candidate ("curr")
-        qint64 nSpDelta;         // stack pointer minus initial stack pointer (0 == fully balanced)
-        bool bJumpFromHigh;      // prev page > curr page (jump down to a lower section)
-        bool bJumpToHigh;        // prev page < curr page
-        bool bJumpFromHeader;    // prev page == image base (executing from the PE header page)
-        bool bPrevIsImage;       // terminating instruction lies inside the main image
-        bool bCurrIsImage;       // target lies inside the main image
-        bool bPrevIsHeap;        // terminating instruction lies in an allocated (non-image, non-stack) region
-        bool bDirtyTarget;       // target page was written during this run
-        qint64 nSteps;           // instructions executed so far
+        quint64 nPrevAddress;   // address of the terminating instruction ("prev")
+        quint32 nPrevSize;      // its length in bytes
+        QByteArray baPrevCode;  // its opcode bytes (up to 16)
+        quint64 nCurrAddress;   // transfer target -- the OEP candidate ("curr")
+        qint64 nSpDelta;        // stack pointer minus initial stack pointer (0 == fully balanced)
+        bool bJumpFromHigh;     // prev page > curr page (jump down to a lower section)
+        bool bJumpToHigh;       // prev page < curr page
+        bool bJumpFromHeader;   // prev page == image base (executing from the PE header page)
+        bool bPrevIsImage;      // terminating instruction lies inside the main image
+        bool bCurrIsImage;      // target lies inside the main image
+        bool bPrevIsHeap;       // terminating instruction lies in an allocated (non-image, non-stack) region
+        bool bDirtyTarget;      // target page was written during this run
+        qint64 nSteps;          // instructions executed so far
         quint64 nImageBase;
         quint64 nImageSize;
-        bool bIs32;              // guest image is 32-bit (mirrors the main module's bitness)
-        bool bIs64;              // guest image is 64-bit (mirrors the main module's bitness)
+        bool bIs32;                         // guest image is 32-bit (mirrors the main module's bitness)
+        bool bIs64;                         // guest image is 64-bit (mirrors the main module's bitness)
         XEmuMemoryManager *pMemoryManager;  // for predicates that inspect bytes around prev
 
         OEP_CONTEXT()
-            : nPrevAddress(0), nPrevSize(0), nCurrAddress(0), nSpDelta(0), bJumpFromHigh(false), bJumpToHigh(false), bJumpFromHeader(false),
-              bPrevIsImage(false), bCurrIsImage(false), bPrevIsHeap(false), bDirtyTarget(false), nSteps(0), nImageBase(0), nImageSize(0),
-              bIs64(false), pMemoryManager(nullptr)
+            : nPrevAddress(0),
+              nPrevSize(0),
+              nCurrAddress(0),
+              nSpDelta(0),
+              bJumpFromHigh(false),
+              bJumpToHigh(false),
+              bJumpFromHeader(false),
+              bPrevIsImage(false),
+              bCurrIsImage(false),
+              bPrevIsHeap(false),
+              bDirtyTarget(false),
+              nSteps(0),
+              nImageBase(0),
+              nImageSize(0),
+              bIs64(false),
+              pMemoryManager(nullptr)
         {
         }
 
@@ -204,8 +225,7 @@ protected:
     // subclass may scan the (dumped) entry section for a stored absolute OEP its stub would have
     // jumped to. Returns an absolute VA (0 = give up). The base returns 0 -> no effect for any
     // family without an override. The caller validates the result (in-image, cross-section, dirty).
-    virtual quint64 recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd,
-                                     quint64 nImageBase, quint64 nImageSize) const;
+    virtual quint64 recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd, quint64 nImageBase, quint64 nImageSize) const;
 
 private:
     // Caller-owned progress/cancellation struct for the current unpack() run (set at its
@@ -217,7 +237,6 @@ private:
     // (unthrottled) so a front end can stream it live. No-op without a PDSTRUCT.
     void reportInfo(const QString &sText);
 
-
     // Rebuild the original ELF from the decompressed image the stub laid out in
     // memory (used when the target is a dynamically-linked ELF that cannot be run to
     // its entry point without a real ld.so on disk). Reads the decompressed ELF
@@ -227,8 +246,8 @@ private:
 
     // Wrap the decompressed in-memory image as a minimal Mach-O (one LC_SEGMENT per
     // committed region + an LC_UNIXTHREAD carrying the recovered entry point).
-    static QByteArray _buildMachO(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOepAbs, bool bIs64,
-                                  quint32 nCpuType, quint32 nCpuSubtype, int *pnSegments);
+    static QByteArray _buildMachO(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOepAbs, bool bIs64, quint32 nCpuType,
+                                  quint32 nCpuSubtype, int *pnSegments);
 };
 
 #endif  // XEMULUNPACKER_H

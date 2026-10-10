@@ -66,9 +66,7 @@ bool XEmulUnpackerArmadillo::matchOEP(const OEP_CONTEXT &c, const OPTIONS &optio
 
     // Pattern 4: 'lea eax, [imm32]' (8D 05) or 'lea ecx, [imm32]' (8D 0D) followed by 'call eax' / 'jmp eax'
     if (c.bJumpToHigh && (c.nPrevSize == 2) && (c.prev16() == 0xD0FF || c.prev16() == 0xE0FF)) {
-
-        if (c.matchSignature(c.nPrevAddress - 6, "8D05........") ||
-            c.matchSignature(c.nPrevAddress - 6, "8D0D........")) {
+        if (c.matchSignature(c.nPrevAddress - 6, "8D05........") || c.matchSignature(c.nPrevAddress - 6, "8D0D........")) {
             return true;
         }
     }

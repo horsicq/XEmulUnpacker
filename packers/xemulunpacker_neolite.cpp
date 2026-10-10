@@ -34,14 +34,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerNeoLite::getDefaultOptions() const
     OPTIONS options;
     // NeoLite unpacker stubs decompress zlib/custom streams and rebuild sections.
     // 10,000,000 steps are more than sufficient to complete the unpacking loop.
-    options.nMaxSteps = 10000000; 
+    options.nMaxSteps = 10000000;
     return options;
 }
 
 bool XEmulUnpackerNeoLite::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // NeoLite primarily targets 32-bit (x86) binaries.
     if (c.bIs64) {
         return false;

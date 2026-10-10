@@ -34,14 +34,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerPESpin::getDefaultOptions() const
     OPTIONS options;
     // PESpin uses significant obfuscation, API redirection, and anti-debugging tricks.
     // We give the emulator a large step limit to let the unpacking loop finish.
-    options.nMaxSteps = 50000000; 
+    options.nMaxSteps = 50000000;
     return options;
 }
 
 bool XEmulUnpackerPESpin::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // Before OEP jump must the stack be balanced.
     if (c.nSpDelta != 0) {
         return false;

@@ -34,14 +34,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerThemida::getDefaultOptions() const
     OPTIONS options;
     // Themida uses advanced protection/VM routines.
     // Finding the OEP requires a significantly higher amount of max steps.
-    options.nMaxSteps = 100000000; 
+    options.nMaxSteps = 100000000;
     return options;
 }
 
 bool XEmulUnpackerThemida::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     if (c.nSpDelta != 0) {
         return false;
     }

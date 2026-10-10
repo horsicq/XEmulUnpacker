@@ -32,9 +32,9 @@ QString XEmulUnpackerPackedInfectedPE::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPackedInfectedPE::getDefaultOptions() const
 {
     OPTIONS options;
-    // Step limit to allow anti-debug checks, CPUID VM checks, API resolution, 
+    // Step limit to allow anti-debug checks, CPUID VM checks, API resolution,
     // Shellcode MessageBox execution, and the final jump to finish.
-    options.nMaxSteps = 10000000; 
+    options.nMaxSteps = 10000000;
     return options;
 }
 
@@ -47,13 +47,13 @@ bool XEmulUnpackerPackedInfectedPE::matchOEP(const OEP_CONTEXT &c, const OPTIONS
     if (c.bIs64) {
         return false;
     }
-    
-    // CRITICAL: We DO NOT check c.nSpDelta! 
+
+    // CRITICAL: We DO NOT check c.nSpDelta!
     // The stub is a standard C function that jumps away directly via inline ASM (jmp 0x12345678).
     // It skips the C compiler's epilogue, leaving the stack frame completely imbalanced.
 
     // CRITICAL: We DO NOT check c.bJumpToHigh!
-    // The packer infects existing code caves or adds a section. The final jump returns 
+    // The packer infects existing code caves or adds a section. The final jump returns
     // to the original PE section, which is part of the mapped image, not a dynamic heap.
 
     // The final transfer is a standard 5-byte relative jump (E9 XX XX XX XX).

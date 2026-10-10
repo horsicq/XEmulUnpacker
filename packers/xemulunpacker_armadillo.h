@@ -23,8 +23,7 @@
 
 #include "xemulunpacker.h"
 
-class XEmulUnpackerArmadillo : public XEmulUnpacker
-{
+class XEmulUnpackerArmadillo : public XEmulUnpacker {
     Q_OBJECT
 public:
     explicit XEmulUnpackerArmadillo(QObject *pParent = nullptr);
@@ -34,4 +33,4 @@ public:
     virtual bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_ARMADILLO_H
+#endif  // XEMULUNPACKER_ARMADILLO_H

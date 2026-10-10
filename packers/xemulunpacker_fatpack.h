@@ -23,4 +23,4 @@ public:
     bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_FATPACK_H
+#endif  // XEMULUNPACKER_FATPACK_H

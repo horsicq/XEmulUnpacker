@@ -34,18 +34,18 @@ XEmulUnpacker::OPTIONS XEmulUnpackerTroglodyte9::getDefaultOptions() const
     OPTIONS options;
     // The packer uses a simple Linear Congruential Generator (LCG) loop for decryption.
     // 5,000,000 steps are usually more than enough to decrypt the regions.
-    options.nMaxSteps = 5000000; 
+    options.nMaxSteps = 5000000;
     return options;
 }
 
 bool XEmulUnpackerTroglodyte9::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // troglodyte9 provides native stubs for both x86 and x64.
     // Therefore, no architecture check is needed here.
 
-    // Decryption is strictly in-place. The stub parses its 'regions' array and 
+    // Decryption is strictly in-place. The stub parses its 'regions' array and
     // modifies the original mapped PE sections. No execution in dynamic heap.
     if (c.bJumpToHigh) {
         return false;

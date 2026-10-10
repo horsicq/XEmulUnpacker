@@ -32,17 +32,17 @@ QString XEmulUnpackerAniko33::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerAniko33::getDefaultOptions() const
 {
     OPTIONS options;
-    // aniko33 is a straightforward manual mapper. It does not use heavy compression 
+    // aniko33 is a straightforward manual mapper. It does not use heavy compression
     // algorithms. It simply copies sections, resolves the IAT, and applies relocations.
     // 10,000,000 steps are more than enough.
-    options.nMaxSteps = 10000000; 
+    options.nMaxSteps = 10000000;
     return options;
 }
 
 bool XEmulUnpackerAniko33::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // The stub explicitly uses IMAGE_NT_HEADERS64 and IMAGE_THUNK_DATA64.
     // It is strictly a 64-bit manual mapper.
     if (!c.bIs64) {
@@ -70,11 +70,10 @@ bool XEmulUnpackerAniko33::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options
         if (c.prev16() >= 0xE0FF && c.prev16() <= 0xE7FF) {
             return true;
         }
-    }
-    else if (c.nPrevSize >= 3 && c.prev8() == 0xFF) {
+    } else if (c.nPrevSize >= 3 && c.prev8() == 0xFF) {
         quint8 secondByte = (c.prev16() >> 8) & 0xFF;
-        
-        // Pattern 3: call [mem] variants 
+
+        // Pattern 3: call [mem] variants
         // FF 15 (call qword ptr [rip+disp32]), FF 5? (call qword ptr [reg+disp8]), etc.
         if (secondByte == 0x15 || (secondByte >= 0x50 && secondByte <= 0x57) || (secondByte >= 0x90 && secondByte <= 0x97)) {
             return true;

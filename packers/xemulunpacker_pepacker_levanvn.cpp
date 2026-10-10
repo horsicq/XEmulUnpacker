@@ -32,16 +32,16 @@ QString XEmulUnpackerPEPackerLevanvn::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPEPackerLevanvn::getDefaultOptions() const
 {
     OPTIONS options;
-    
+
     // Set a reasonable step limit to allow the unpacking loop to finish.
-    options.nMaxSteps = 5000000; 
+    options.nMaxSteps = 5000000;
     return options;
 }
 
 bool XEmulUnpackerPEPackerLevanvn::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // The stack must be balanced before jumping to the Original Entry Point (OEP).
     if (c.nSpDelta != 0) {
         return false;

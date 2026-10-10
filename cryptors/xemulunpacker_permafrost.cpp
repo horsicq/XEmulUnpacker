@@ -32,15 +32,15 @@ QString XEmulUnpackerPermafrost::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPermafrost::getDefaultOptions() const
 {
     OPTIONS options;
-    
+
     // The unshuffle process is relatively fast (O(N) based on block count).
     // A mid-range step limit is sufficient to sort even a large .text section.
-    options.nMaxSteps = 5000000; 
-    
-    // Permafrost unpacks entirely within the .text section (code cave), 
+    options.nMaxSteps = 5000000;
+
+    // Permafrost unpacks entirely within the .text section (code cave),
     // so we disable section hop detection to prevent false negatives.
     options.bDetectSectionHop = false;
-    
+
     return options;
 }
 
@@ -48,17 +48,16 @@ bool XEmulUnpackerPermafrost::matchOEP(const OEP_CONTEXT &c, const OPTIONS &opti
 {
     Q_UNUSED(options)
 
-    // The final instruction is always a 'JMP RAX' (FF E0) 
+    // The final instruction is always a 'JMP RAX' (FF E0)
     if (c.nPrevSize == 2 && c.prev16() == 0xE0FF) {
-        
         // Scenario 1: Standard Mode
         // Looks for: LEA RAX, [RBX + offset] -> 48 8D 83 ?? ?? ?? ??
         if (c.matchSignature(c.nPrevAddress - 7, "488D83........")) {
             return true;
         }
-        
+
         // Scenario 2: TLS Mode
-        // Looks for the POP sequence preceding the JMP RAX: 
+        // Looks for the POP sequence preceding the JMP RAX:
         // POP R8, POP RDX, POP RCX, POP RDI, POP RSI, POP RBP, POP RBX
         // -> 41 58 5A 59 5F 5E 5D 5B
         if (c.matchSignature(c.nPrevAddress - 8, "41585A595F5E5D5B")) {

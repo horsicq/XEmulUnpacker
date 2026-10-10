@@ -51,10 +51,10 @@ bool XEmulUnpackerMPRESS::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options)
     if ((c.nPrevSize != 5) || (c.nSpDelta != 0) || (c.prev8() != 0xE9) || !c.bCurrIsImage) {
         return false;
     }
-    const quint64 nWin = c.nPrevAddress - 10;  // 15-byte window covering the epilogue + jmp
-    return c.matchSignature(nWin, "AB4883C4285E5F5B5A59")   // x64 0.71-0.97
-        || c.matchSignature(nWin, "83c42841585a595b5e5f")   // x64 1.27-2.12
-        || c.matchSignature(nWin, "..........AB83c42861")   // 0.77-0.97 (stosb/popad)
-        || c.matchSignature(nWin, "..ab83c4285e5f5b5a59")   // 0.71-0.75
-        || c.matchSignature(nWin, "....aab8........ab61");  // 1.27-2.12
+    const quint64 nWin = c.nPrevAddress - 10;                  // 15-byte window covering the epilogue + jmp
+    return c.matchSignature(nWin, "AB4883C4285E5F5B5A59")      // x64 0.71-0.97
+           || c.matchSignature(nWin, "83c42841585a595b5e5f")   // x64 1.27-2.12
+           || c.matchSignature(nWin, "..........AB83c42861")   // 0.77-0.97 (stosb/popad)
+           || c.matchSignature(nWin, "..ab83c4285e5f5b5a59")   // 0.71-0.75
+           || c.matchSignature(nWin, "....aab8........ab61");  // 1.27-2.12
 }

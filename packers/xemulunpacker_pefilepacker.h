@@ -33,4 +33,4 @@ public:
     bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_PEFILEPACKER_H
+#endif  // XEMULUNPACKER_PEFILEPACKER_H

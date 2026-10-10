@@ -22,19 +22,19 @@ QString XEmulUnpackerAlushPacker::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerAlushPacker::getDefaultOptions() const
 {
     OPTIONS options;
-    // AlushPacker uses XTEA block decryption, LZAV decompression, resolves imports 
+    // AlushPacker uses XTEA block decryption, LZAV decompression, resolves imports
     // (including binary searches for forwarded exports), and handles Relocations/TLS.
     // This requires an exceptionally high step limit to prevent emulation timeouts.
-    options.nMaxSteps = 50000000; 
+    options.nMaxSteps = 50000000;
     return options;
 }
 
 bool XEmulUnpackerAlushPacker::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // AlushPacker is a manual mapper that dynamically allocates memory (via VirtualAlloc)
-    // for the uncompressed/decrypted payload. The jump to OEP or the first TLS Callback 
+    // for the uncompressed/decrypted payload. The jump to OEP or the first TLS Callback
     // MUST point outside the original stub into this high memory area.
     if (!c.bJumpToHigh) {
         return false;

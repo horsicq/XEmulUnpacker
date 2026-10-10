@@ -23,8 +23,7 @@
 
 #include "xemulunpacker.h"
 
-class XEmulUnpackerAniko33 : public XEmulUnpacker
-{
+class XEmulUnpackerAniko33 : public XEmulUnpacker {
     Q_OBJECT
 public:
     explicit XEmulUnpackerAniko33(QObject *pParent = nullptr);
@@ -34,4 +33,4 @@ public:
     virtual bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_ANIKO33_H
+#endif  // XEMULUNPACKER_ANIKO33_H

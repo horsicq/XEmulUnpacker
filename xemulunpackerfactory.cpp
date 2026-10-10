@@ -68,7 +68,7 @@ XEmulUnpacker *make(QObject *pParent)
 }
 
 struct ENTRY {
-    const char *pszName;                        // matches the subclass getPackerName()
+    const char *pszName;  // matches the subclass getPackerName()
     XEmulUnpacker *(*pfnCreate)(QObject *pParent);
 };
 

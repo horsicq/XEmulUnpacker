@@ -22,37 +22,37 @@ QString XEmulUnpackerPinkiePie::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPinkiePie::getDefaultOptions() const
 {
     OPTIONS options;
-    // The packer uses a very fast XOR loop and a short polymorphic math engine 
+    // The packer uses a very fast XOR loop and a short polymorphic math engine
     // to calculate API calls and the OEP. It's extremely lightweight.
     // 5,000,000 steps are more than enough to fully emulate the .kucd section.
-    options.nMaxSteps = 5000000; 
+    options.nMaxSteps = 5000000;
     return options;
 }
 
 bool XEmulUnpackerPinkiePie::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // This packer ONLY supports 32-bit (x86) binaries.
     if (c.bIs64) {
         return false;
     }
 
-    // The packer modifies the existing PE file by appending a '.kucd' section 
-    // and XOR-decrypting the original code section in-place. 
+    // The packer modifies the existing PE file by appending a '.kucd' section
+    // and XOR-decrypting the original code section in-place.
     // It does not allocate dynamic high-memory via VirtualAlloc.
     if (c.bJumpToHigh) {
         return false;
     }
 
-    // Since the stub cleans up after itself before transferring execution back 
+    // Since the stub cleans up after itself before transferring execution back
     // to the original code section, the stack must be balanced.
     if (c.nSpDelta != 0) {
         return false;
     }
-    
-    // According to the provided 'shellcode.cpp', the polymorphic engine uses arithmetic 
-    // (ADD, SUB, XOR) to dynamically calculate the OEP address specifically inside the 
+
+    // According to the provided 'shellcode.cpp', the polymorphic engine uses arithmetic
+    // (ADD, SUB, XOR) to dynamically calculate the OEP address specifically inside the
     // EAX register. After calculation, execution is transferred to this register.
 
     // Pattern 1: Indirect jump via register (most likely 'jmp eax')

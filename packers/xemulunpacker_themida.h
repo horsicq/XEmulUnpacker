@@ -23,8 +23,7 @@
 
 #include "xemulunpacker.h"
 
-class XEmulUnpackerThemida : public XEmulUnpacker
-{
+class XEmulUnpackerThemida : public XEmulUnpacker {
     Q_OBJECT
 public:
     explicit XEmulUnpackerThemida(QObject *pParent = nullptr);
@@ -34,4 +33,4 @@ public:
     virtual bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_THEMIDA_H
+#endif  // XEMULUNPACKER_THEMIDA_H

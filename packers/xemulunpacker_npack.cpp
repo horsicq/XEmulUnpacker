@@ -45,8 +45,7 @@ bool XEmulUnpackerNPack::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) 
     return c.bJumpFromHigh && (c.nPrevSize == 1) && (c.nSpDelta == 0) && (c.prev8() == 0xC3);
 }
 
-quint64 XEmulUnpackerNPack::recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd,
-                                             quint64 nImageBase, quint64 nImageSize) const
+quint64 XEmulUnpackerNPack::recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd, quint64 nImageBase, quint64 nImageSize) const
 {
     // The nPack stub tail is `add [P],eax ; push [P] ; ret` == 01 05 <P32> ..(<=32B).. FF 35 <P32> C3
     // (same absolute pointer P). [P] holds the preferred-absolute OEP, written by the metadata

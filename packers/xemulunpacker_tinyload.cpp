@@ -32,18 +32,18 @@ QString XEmulUnpackerTinyLoad::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerTinyLoad::getDefaultOptions() const
 {
     OPTIONS options;
-    // TinyLoad employs a custom 28-opcode Virtual Machine to run a stream cipher, 
+    // TinyLoad employs a custom 28-opcode Virtual Machine to run a stream cipher,
     // applies XXTEA decryption, and uses a VEH (Vectored Exception Handler) for page faults.
     // Emulating a VM executing cryptographic routines requires a colossal amount of CPU cycles.
     // We max out the step limit to ensure the emulator doesn't time out prematurely.
-    options.nMaxSteps = 150000000; 
+    options.nMaxSteps = 150000000;
     return options;
 }
 
 bool XEmulUnpackerTinyLoad::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     if (!c.bIs64) {
         return false;
     }

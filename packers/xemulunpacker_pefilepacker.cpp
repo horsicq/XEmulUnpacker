@@ -33,14 +33,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerPEFilePacker::getDefaultOptions() const
 {
     OPTIONS options;
     // Simple XOR decryption loop requires a low step count to finish quickly.
-    options.nMaxSteps = 3000000; 
+    options.nMaxSteps = 3000000;
     return options;
 }
 
 bool XEmulUnpackerPEFilePacker::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // The stack must be balanced before jumping to the Original Entry Point.
     if (c.nSpDelta != 0) {
         return false;

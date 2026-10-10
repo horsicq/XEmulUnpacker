@@ -34,14 +34,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerUchiha::getDefaultOptions() const
     OPTIONS options;
     // aPLib decompression and dynamic IAT resolving loops.
     // 10,000,000 steps are completely sufficient for this lightweight logic.
-    options.nMaxSteps = 10000000; 
+    options.nMaxSteps = 10000000;
     return options;
 }
 
 bool XEmulUnpackerUchiha::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // Uchiha strictly targets 32-bit (x86) executables.
     if (c.bIs64) {
         return false;
@@ -55,7 +55,6 @@ bool XEmulUnpackerUchiha::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options)
 
     // Check if the current instruction is the 5-byte relative JMP to OEP
     if (c.nPrevSize == 5 && c.prev8() == 0xE9) {
-        
         // Look exactly 6 bytes backwards to see if it was preceded by the JNE
         if (c.matchSignature(c.nPrevAddress - 6, "0F85")) {
             return true;

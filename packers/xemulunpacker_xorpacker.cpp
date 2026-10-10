@@ -34,14 +34,14 @@ XEmulUnpacker::OPTIONS XEmulUnpackerXorPacker::getDefaultOptions() const
     OPTIONS options;
     // The unpacker stub uses a lightweight RCX loop to XOR-decrypt the code section in-place.
     // 5,000,000 steps are more than enough to complete the loop instantly.
-    options.nMaxSteps = 5000000; 
+    options.nMaxSteps = 5000000;
     return options;
 }
 
 bool XEmulUnpackerXorPacker::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // The unpacker script relies entirely on x64 registers (RAX, RCX) and REX prefixes.
     if (!c.bIs64) {
         return false;
@@ -53,7 +53,7 @@ bool XEmulUnpackerXorPacker::matchOEP(const OEP_CONTEXT &c, const OPTIONS &optio
         return false;
     }
 
-    // As generated in generate_unpacker_x64(), the stub finishes the decryption loop 
+    // As generated in generate_unpacker_x64(), the stub finishes the decryption loop
     // and directly executes a relative 32-bit jump (E9 XX XX XX XX) back to the OEP.
     if ((c.nPrevSize == 5) && (c.prev8() == 0xE9)) {
         return true;

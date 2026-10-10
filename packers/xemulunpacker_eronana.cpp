@@ -34,22 +34,22 @@ XEmulUnpacker::OPTIONS XEmulUnpackerEronana::getDefaultOptions() const
     OPTIONS options;
     // Eronana Packer utilizes a custom compression loop and manual IAT reconstruction.
     // 15,000,000 steps remain a solid upper bound to ensure complete execution.
-    options.nMaxSteps = 15000000; 
+    options.nMaxSteps = 15000000;
     return options;
 }
 
 bool XEmulUnpackerEronana::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // x86 only!
     if (c.bIs64) {
         return false;
     }
 
-    // The packer uses a highly specific tail-jump technique to preserve the OEP 
-    // address after calling POPAD. 
-    // 
+    // The packer uses a highly specific tail-jump technique to preserve the OEP
+    // address after calling POPAD.
+    //
     // The exact byte sequence is:
     // 0x61             -> POPAD
     // 0xFF 0x65 0xFC   -> JMP [EBP-4]

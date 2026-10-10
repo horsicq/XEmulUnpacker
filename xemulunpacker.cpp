@@ -147,8 +147,7 @@ struct GU_DirtyPageWatcher {
         // Align on 4 (the minimum IAT-slot alignment) even for 64-bit: a PE32+ FirstThunk
         // array holds 8-byte entries but the array itself is only dword-aligned, so slots can
         // sit at 4-mod-8 RVAs.
-        if ((pIatSlots != nullptr) && ((int)nSize == nPtrSize) && ((nAddress & 3) == 0) &&
-            (nValue >= nStubBase) && (nValue < nStubLimit)) {
+        if ((pIatSlots != nullptr) && ((int)nSize == nPtrSize) && ((nAddress & 3) == 0) && (nValue >= nStubBase) && (nValue < nStubLimit)) {
             (*pIatSlots)[nAddress] = nValue;
         }
     }
@@ -165,8 +164,8 @@ struct GU_ApiLogFilter {
         if (pApiLog->size() >= nMaxApiLog) {
             return;
         }
-        static const char *s_keys[] = {"VirtualAlloc(", "VirtualProtect(", "LoadLibraryA(", "GetProcAddress(", "mmap(",   "mprotect(", "msync(",
-                                       "munmap(",       "memfd",           "open =",        "execve",         "write("};
+        static const char *s_keys[] = {"VirtualAlloc(", "VirtualProtect(", "LoadLibraryA(", "GetProcAddress(", "mmap(",  "mprotect(",
+                                       "msync(",        "munmap(",         "memfd",         "open =",          "execve", "write("};
         for (const char *pszKey : s_keys) {
             if (sText.contains(QLatin1String(pszKey))) {
                 pApiLog->append(sText);
@@ -190,10 +189,9 @@ XEmulUnpacker::~XEmulUnpacker()
 // pointing at the existing (dumped) IAT slots so the real loader re-resolves them. Handles
 // both PE32 (dword thunks/slots) and PE32+ (qword). Returns the blob (empty if nothing to
 // build) and fills the directory RVA/size.
-static QByteArray guBuildImportBlob(const QList<GU_IMPORT> &listImportsIn, quint32 nSecRva, bool bIs64,
-                                    quint32 *pnDirRva, quint32 *pnDirSize)
+static QByteArray guBuildImportBlob(const QList<GU_IMPORT> &listImportsIn, quint32 nSecRva, bool bIs64, quint32 *pnDirRva, quint32 *pnDirSize)
 {
-    const quint32 nPtr = bIs64 ? 8u : 4u;                          // IMAGE_THUNK_DATA width
+    const quint32 nPtr = bIs64 ? 8u : 4u;  // IMAGE_THUNK_DATA width
     const quint64 nOrdinalFlag = bIs64 ? 0x8000000000000000ULL : 0x80000000ULL;
 
     QList<GU_IMPORT> imps = listImportsIn;
@@ -265,9 +263,9 @@ static QByteArray guBuildImportBlob(const QList<GU_IMPORT> &listImportsIn, quint
 
     for (int g = 0; g < nG; g++) {
         char *d = b + (nDescOff + (quint32)g * 0x14);
-        wr32(d + 0, vIntRva[g]);                                  // OriginalFirstThunk (INT)
-        wr32(d + 12, vLibRva[g]);                                 // Name
-        wr32(d + 16, imps.at(groups.at(g).nStart).nSlotRva);      // FirstThunk (existing IAT)
+        wr32(d + 0, vIntRva[g]);                              // OriginalFirstThunk (INT)
+        wr32(d + 12, vLibRva[g]);                             // Name
+        wr32(d + 16, imps.at(groups.at(g).nStart).nSlotRva);  // FirstThunk (existing IAT)
     }
     for (int g = 0; g < nG; g++) {
         char *t = b + (vIntRva[g] - nSecRva);
@@ -339,8 +337,8 @@ static QByteArray guCaptureImageBytes(XEmuMemoryManager *pMemoryManager, quint64
 // Run the stub a SECOND time with the main image forced to nBase2, single-stepping until it
 // reaches the already-known OEP (nBase2 + nOepRva), then capture the unpacked image. Returns an
 // empty buffer if the override did not take (image not relocatable) or the OEP was not reached.
-static QByteArray guCaptureAtBase(const QString &sFileName, XEmuEmulator::OPTIONS emuOpt, quint64 nBase2, quint64 nOepRva, quint64 nImageSize,
-                                  qint64 nMaxSteps, XBinary::PDSTRUCT *pPdStruct)
+static QByteArray guCaptureAtBase(const QString &sFileName, XEmuEmulator::OPTIONS emuOpt, quint64 nBase2, quint64 nOepRva, quint64 nImageSize, qint64 nMaxSteps,
+                                  XBinary::PDSTRUCT *pPdStruct)
 {
     emuOpt.nImageBaseOverride = nBase2;
 
@@ -440,8 +438,8 @@ static QByteArray guBuildRelocBlob(const QList<quint32> &rvasIn, bool bIs64)
     return blob;
 }
 
-static QByteArray guBuildPE(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOEP, bool bIs64,
-                            const QList<GU_IMPORT> &listImports, const QByteArray &baRelocBlob, int *pnSections)
+static QByteArray guBuildPE(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOEP, bool bIs64, const QList<GU_IMPORT> &listImports,
+                            const QByteArray &baRelocBlob, int *pnSections)
 {
     // Collect the committed image regions inside [nImageBase, nImageBase+nImageSize)
     // and turn each into a section of the rebuilt PE.
@@ -609,15 +607,15 @@ static QByteArray guBuildPE(XEmuMemoryManager *pMemoryManager, quint64 nImageBas
     const int nDataDirOff = bIs64 ? 0x70 : 0x60;
 
     if (!bIs64) {
-        wr32(oh + 28, (quint32)nImageBase);  // ImageBase
-        wr32(oh + 32, 0x1000);               // SectionAlignment
-        wr32(oh + 36, 0x200);                // FileAlignment
-        wr16(oh + 40, 5);                    // MajorOperatingSystemVersion
-        wr16(oh + 48, 5);                    // MajorSubsystemVersion
+        wr32(oh + 28, (quint32)nImageBase);          // ImageBase
+        wr32(oh + 32, 0x1000);                       // SectionAlignment
+        wr32(oh + 36, 0x200);                        // FileAlignment
+        wr16(oh + 40, 5);                            // MajorOperatingSystemVersion
+        wr16(oh + 48, 5);                            // MajorSubsystemVersion
         wr32(oh + 56, alignUp32(nMaxVEnd, 0x1000));  // SizeOfImage
-        wr32(oh + 60, nRawBase);             // SizeOfHeaders
-        wr16(oh + 68, nSubsystem);           // Subsystem (preserved from source)
-        wr32(oh + 92, 16);                   // NumberOfRvaAndSizes
+        wr32(oh + 60, nRawBase);                     // SizeOfHeaders
+        wr16(oh + 68, nSubsystem);                   // Subsystem (preserved from source)
+        wr32(oh + 92, 16);                           // NumberOfRvaAndSizes
     } else {
         wr32(oh + 24, (quint32)nImageBase);          // ImageBase (low)
         wr32(oh + 28, (quint32)(nImageBase >> 32));  // ImageBase (high)
@@ -696,8 +694,8 @@ static QByteArray guBuildPE(XEmuMemoryManager *pMemoryManager, quint64 nImageBas
     return baResult;
 }
 
-QByteArray XEmulUnpacker::_buildMachO(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOepAbs, bool bIs64,
-                                            quint32 nCpuType, quint32 nCpuSubtype, int *pnSegments)
+QByteArray XEmulUnpacker::_buildMachO(XEmuMemoryManager *pMemoryManager, quint64 nImageBase, quint64 nImageSize, quint64 nOepAbs, bool bIs64, quint32 nCpuType,
+                                      quint32 nCpuSubtype, int *pnSegments)
 {
     QList<GU_SEGMENT> listSegs;
     QList<XEmuMemoryManager::REGION> listRegions = pMemoryManager->getRegions();
@@ -737,8 +735,8 @@ QByteArray XEmulUnpacker::_buildMachO(XEmuMemoryManager *pMemoryManager, quint64
     const int nRegIndex = bArm ? 32 : 16;
     const quint32 nThreadCmdSize = 16 + nThreadCount * 4;
 
-    const quint32 nSegCmd = bIs64 ? 0x19 : 0x1;         // LC_SEGMENT_64 / LC_SEGMENT
-    const quint32 nSegCmdSize = bIs64 ? 72 : 56;        // no sections
+    const quint32 nSegCmd = bIs64 ? 0x19 : 0x1;   // LC_SEGMENT_64 / LC_SEGMENT
+    const quint32 nSegCmdSize = bIs64 ? 72 : 56;  // no sections
     const quint32 nHdrSize = bIs64 ? 32 : 28;
     const int nSegCount = listSegs.size();
 
@@ -773,14 +771,14 @@ QByteArray XEmulUnpacker::_buildMachO(XEmuMemoryManager *pMemoryManager, quint64
         snprintf(szName, sizeof(szName), "__SEG%.2d", i);
         memcpy(lc + 8, szName, qMin<size_t>(16, strlen(szName)));
         if (bIs64) {
-            wr64(lc + 24, s.nAddr);        // vmaddr
-            wr64(lc + 32, nFileSize);      // vmsize
-            wr64(lc + 40, nRaw);           // fileoff
-            wr64(lc + 48, s.nSize);        // filesize
-            wr32(lc + 56, 7);              // maxprot rwx
-            wr32(lc + 60, 7);              // initprot rwx
-            wr32(lc + 64, 0);              // nsects
-            wr32(lc + 68, 0);              // flags
+            wr64(lc + 24, s.nAddr);    // vmaddr
+            wr64(lc + 32, nFileSize);  // vmsize
+            wr64(lc + 40, nRaw);       // fileoff
+            wr64(lc + 48, s.nSize);    // filesize
+            wr32(lc + 56, 7);          // maxprot rwx
+            wr32(lc + 60, 7);          // initprot rwx
+            wr32(lc + 64, 0);          // nsects
+            wr32(lc + 68, 0);          // flags
         } else {
             wr32(lc + 24, (quint32)s.nAddr);
             wr32(lc + 28, nFileSize);
@@ -815,7 +813,8 @@ QByteArray XEmulUnpacker::_reconstructElfFromMemory(XEmuMemoryManager *pMemoryMa
     if ((pMemoryManager->readByte(nImageBase, &bOk) != 0x7F) || !bOk) {
         return QByteArray();  // no ELF header mapped here
     }
-    if ((guReadMem(pMemoryManager, nImageBase + 1, 1) != 'E') || (guReadMem(pMemoryManager, nImageBase + 2, 1) != 'L') || (guReadMem(pMemoryManager, nImageBase + 3, 1) != 'F')) {
+    if ((guReadMem(pMemoryManager, nImageBase + 1, 1) != 'E') || (guReadMem(pMemoryManager, nImageBase + 2, 1) != 'L') ||
+        (guReadMem(pMemoryManager, nImageBase + 3, 1) != 'F')) {
         return QByteArray();
     }
 
@@ -1032,7 +1031,10 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             QByteArray baHdr = file.read(64);
             const uchar *e = reinterpret_cast<const uchar *>(baHdr.constData());
 
-            bElf = baHdr.startsWith(QByteArray("\x7f" "ELF", 4));
+            bElf =
+                baHdr.startsWith(QByteArray("\x7f"
+                                            "ELF",
+                                            4));
             if (bElf && (baHdr.size() >= 64)) {
                 int nSz = (e[4] == 2) ? 8 : 4;
                 for (int i = 0; i < nSz; i++) {
@@ -1045,8 +1047,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                     bMachO = true;
                     nMachCpuType = e[4] | (e[5] << 8) | (e[6] << 16) | ((quint32)e[7] << 24);
                     nMachCpuSubtype = e[8] | (e[9] << 8) | (e[10] << 16) | ((quint32)e[11] << 24);
-                } else if ((nMagic == 0xBEBAFECA) || (nMagic == 0xCAFEBABE) ||
-                           (nMagic == 0xBFBAFECA) || (nMagic == 0xCAFEBABF)) {
+                } else if ((nMagic == 0xBEBAFECA) || (nMagic == 0xCAFEBABE) || (nMagic == 0xBFBAFECA) || (nMagic == 0xCAFEBABF)) {
                     bMachO = true;  // universal binary; cputype filled in from the loaded slice below
                 }
             }
@@ -1216,16 +1217,25 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             }
             if (!listCb.isEmpty()) {
                 QByteArray baThunk;
-                auto guEmit32 = [&](quint32 v) { for (int k = 0; k < 4; k++) baThunk.append((char)((v >> (k * 8)) & 0xFF)); };
+                auto guEmit32 = [&](quint32 v) {
+                    for (int k = 0; k < 4; k++) baThunk.append((char)((v >> (k * 8)) & 0xFF));
+                };
                 for (const quint32 nCb : listCb) {
-                    baThunk.append((char)0x6A); baThunk.append((char)0x00);      // push 0            (reserved)
-                    baThunk.append((char)0x6A); baThunk.append((char)0x01);      // push 1            (DLL_PROCESS_ATTACH)
-                    baThunk.append((char)0x68); guEmit32((quint32)nImageBase);   // push imagebase    (hInstance)
-                    baThunk.append((char)0xB8); guEmit32(nCb);                   // mov eax, callback
-                    baThunk.append((char)0xFF); baThunk.append((char)0xD0);      // call eax
+                    baThunk.append((char)0x6A);
+                    baThunk.append((char)0x00);  // push 0            (reserved)
+                    baThunk.append((char)0x6A);
+                    baThunk.append((char)0x01);  // push 1            (DLL_PROCESS_ATTACH)
+                    baThunk.append((char)0x68);
+                    guEmit32((quint32)nImageBase);  // push imagebase    (hInstance)
+                    baThunk.append((char)0xB8);
+                    guEmit32(nCb);  // mov eax, callback
+                    baThunk.append((char)0xFF);
+                    baThunk.append((char)0xD0);  // call eax
                 }
-                baThunk.append((char)0xB8); guEmit32((quint32)nStartPC);         // mov eax, entry
-                baThunk.append((char)0xFF); baThunk.append((char)0xE0);          // jmp eax
+                baThunk.append((char)0xB8);
+                guEmit32((quint32)nStartPC);  // mov eax, entry
+                baThunk.append((char)0xFF);
+                baThunk.append((char)0xE0);  // jmp eax
                 XADDR nThunk = pMM->allocate(0, 0x1000, XEmuMemoryManager::MEMORY_FLAGS(true, true, true), QStringLiteral("tls-thunk"));
                 if (nThunk != 0) {
                     pMM->write(nThunk, baThunk);
@@ -1321,12 +1331,15 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 // real OEP is stored as an absolute dword its `push [P]; ret` tail would have used.
                 const int nEntrySec = guSectionOf(listSecRanges, nStartPC);
                 quint64 nScanStart = nImageBase, nScanEnd = nImageBase + nImageSize;
-                if (nEntrySec >= 0) { nScanStart = listSecRanges.at(nEntrySec).nStart; nScanEnd = listSecRanges.at(nEntrySec).nEnd; }
+                if (nEntrySec >= 0) {
+                    nScanStart = listSecRanges.at(nEntrySec).nStart;
+                    nScanEnd = listSecRanges.at(nEntrySec).nEnd;
+                }
                 const quint64 nRec = recoverOepAtStop(pMM, nScanStart, nScanEnd, nImageBase, nImageSize);
                 if (nRec != 0) {
                     const int nRecSec = guSectionOf(listSecRanges, nRec);
-                    if ((nRec >= nImageBase) && (nRec < nImageBase + nImageSize) && (nRecSec >= 0) &&
-                        (nRecSec != nEntrySec) && setDirtyPages.contains(nRec & nPageMask)) {
+                    if ((nRec >= nImageBase) && (nRec < nImageBase + nImageSize) && (nRecSec >= 0) && (nRecSec != nEntrySec) &&
+                        setDirtyPages.contains(nRec & nPageMask)) {
                         bOep = true;
                         nOepAbs = nRec;
                         result.sMethod = getPackerName() + QStringLiteral(" OEP-slot recovery");
@@ -1341,10 +1354,8 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 nOepAbs = nEpRedirectOep;
                 result.sMethod = QStringLiteral("ep-redirect hand-off");
             }
-            if (!bOep && bTlsCallbacksRun && (si.sText == QStringLiteral("process-exit")) &&
-                (getPackerName() == QStringLiteral("ASPack")) && (nStartSection >= 0) &&
-                (nStartPC >= nImageBase) && (nStartPC < nImageBase + nImageSize) &&
-                !setDirtyPages.isEmpty() && (nStartPC != 0)) {
+            if (!bOep && bTlsCallbacksRun && (si.sText == QStringLiteral("process-exit")) && (getPackerName() == QStringLiteral("ASPack")) && (nStartSection >= 0) &&
+                (nStartPC >= nImageBase) && (nStartPC < nImageBase + nImageSize) && !setDirtyPages.isEmpty() && (nStartPC != 0)) {
                 // ASDPack samples can complete all unpacking inside a TLS callback and
                 // terminate there via ExitProcess. The true OEP is the original entry in that
                 // case even if no conventional transfer heuristic fired.
@@ -1352,9 +1363,8 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 nOepAbs = nStartPC;
                 result.sMethod = QStringLiteral("ASPack TLS callback exit");
             }
-            if (!bElf && !bMachO && !bOep && !bWtePending && setDirtyPages.isEmpty() &&
-                       (nStartPC >= nImageBase) && (nStartPC < nImageBase + nImageSize) &&
-                       (si.nAddress >= nStubBase) && (si.nAddress < nStubLimit)) {
+            if (!bElf && !bMachO && !bOep && !bWtePending && setDirtyPages.isEmpty() && (nStartPC >= nImageBase) && (nStartPC < nImageBase + nImageSize) &&
+                (si.nAddress >= nStubBase) && (si.nAddress < nStubLimit)) {
                 // EP-is-OEP "stored"/passthrough output (cexe, 20to4, UPolyX on an incompressible
                 // input): the mapped image was NEVER self-modified (no in-image page went dirty)
                 // yet the program ran to a clean emulated terminate (ExitProcess-style trampoline
@@ -1393,12 +1403,15 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 // below weak-OEP and above ep-redirect, matching the halt path.
                 const int nEntrySec = guSectionOf(listSecRanges, nStartPC);
                 quint64 nScanStart = nImageBase, nScanEnd = nImageBase + nImageSize;
-                if (nEntrySec >= 0) { nScanStart = listSecRanges.at(nEntrySec).nStart; nScanEnd = listSecRanges.at(nEntrySec).nEnd; }
+                if (nEntrySec >= 0) {
+                    nScanStart = listSecRanges.at(nEntrySec).nStart;
+                    nScanEnd = listSecRanges.at(nEntrySec).nEnd;
+                }
                 const quint64 nRec = recoverOepAtStop(pMM, nScanStart, nScanEnd, nImageBase, nImageSize);
                 if (nRec != 0) {
                     const int nRecSec = guSectionOf(listSecRanges, nRec);
-                    if ((nRec >= nImageBase) && (nRec < nImageBase + nImageSize) && (nRecSec >= 0) &&
-                        (nRecSec != nEntrySec) && setDirtyPages.contains(nRec & nPageMask)) {
+                    if ((nRec >= nImageBase) && (nRec < nImageBase + nImageSize) && (nRecSec >= 0) && (nRecSec != nEntrySec) &&
+                        setDirtyPages.contains(nRec & nPageMask)) {
                         bOep = true;
                         nOepAbs = nRec;
                         result.sMethod = getPackerName() + QStringLiteral(" OEP-slot recovery");
@@ -1436,8 +1449,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             // hand-off is frequently intra-page, so the page-crossing block below never sees it).
             // nNext <= nStartPC short-circuits normal forward flow -> cheap. First-wins, stack near
             // balanced, target not the sequential fall-through. Recorded only; consumed at halt.
-            if ((nEpRedirectOep == 0) && (nNext <= nStartPC) && (nNext >= nImageBase) &&
-                (nNext != nInstrAddr + si.nLength) && (guSectionOf(listSecRanges, nNext) >= 0)) {
+            if ((nEpRedirectOep == 0) && (nNext <= nStartPC) && (nNext >= nImageBase) && (nNext != nInstrAddr + si.nLength) && (guSectionOf(listSecRanges, nNext) >= 0)) {
                 const qint64 nSpNow = (qint64)pArch->getStackPointer(pRegs) - nInitSP;
                 if ((nSpNow >= -0x40) && (nSpNow <= 0x40)) {
                     nEpRedirectOep = nNext;
@@ -1495,9 +1507,8 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
                 // No gate; never breaks the run -- consumed ONLY at end-of-run when no stronger
                 // heuristic fired, which a working multi-stage packer never reaches.
                 const int nWeakSec = guSectionOf(listSecRanges, nNext);
-                if ((nWeakOep == 0) && ctx.bCurrIsImage && ctx.bDirtyTarget &&
-                    (nWeakSec >= 0) && (nWeakSec != nStartSection) &&
-                    (ctx.nSpDelta >= -0x40) && (ctx.nSpDelta <= 0x40)) {
+                if ((nWeakOep == 0) && ctx.bCurrIsImage && ctx.bDirtyTarget && (nWeakSec >= 0) && (nWeakSec != nStartSection) && (ctx.nSpDelta >= -0x40) &&
+                    (ctx.nSpDelta <= 0x40)) {
                     nWeakOep = nNext;
                 }
             }
@@ -1548,7 +1559,9 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
         result.bSuccess = true;
 
         // Parse the ELF header for the entry point and program-header count.
-        if ((baReplacement.size() >= 64) && baReplacement.startsWith(QByteArray("\x7f" "ELF", 4))) {
+        if ((baReplacement.size() >= 64) && baReplacement.startsWith(QByteArray("\x7f"
+                                                                                "ELF",
+                                                                                4))) {
             const uchar *p = reinterpret_cast<const uchar *>(baReplacement.constData());
             bool bIs64Elf = (p[4] == 2);
             quint64 nEntry = 0;
@@ -1567,10 +1580,8 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
             reportInfo(tr("OEP detected: RVA 0x%1 (%2)").arg(result.nOEP, 0, 16).arg(result.sMethod));
         }
 
-        result.sReason = QStringLiteral("unpacked ELF reconstructed via execve (%1 bytes, entry 0x%2) after %3 steps")
-                             .arg(baReplacement.size())
-                             .arg(result.nOEP, 0, 16)
-                             .arg(nSteps);
+        result.sReason =
+            QStringLiteral("unpacked ELF reconstructed via execve (%1 bytes, entry 0x%2) after %3 steps").arg(baReplacement.size()).arg(result.nOEP, 0, 16).arg(nSteps);
         return result;
     }
 
@@ -1751,11 +1762,7 @@ XEmulUnpacker::RESULT XEmulUnpacker::unpack(const QString &sFileName, const OPTI
     }
 
     result.bSuccess = true;
-    result.sReason = QStringLiteral("OEP at RVA 0x%1 (%2) after %3 steps, %4 section(s)")
-                         .arg(result.nOEP, 0, 16)
-                         .arg(result.sMethod)
-                         .arg(nSteps)
-                         .arg(result.nSections);
+    result.sReason = QStringLiteral("OEP at RVA 0x%1 (%2) after %3 steps, %4 section(s)").arg(result.nOEP, 0, 16).arg(result.sMethod).arg(nSteps).arg(result.nSections);
     return result;
 }
 

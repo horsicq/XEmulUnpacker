@@ -23,8 +23,7 @@
 
 #include "xemulunpacker.h"
 
-class XEmulUnpackerPermafrost : public XEmulUnpacker
-{
+class XEmulUnpackerPermafrost : public XEmulUnpacker {
     Q_OBJECT
 
 public:
@@ -37,4 +36,4 @@ protected:
     virtual bool matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const override;
 };
 
-#endif // XEMULUNPACKER_PERMAFROST_H
+#endif  // XEMULUNPACKER_PERMAFROST_H

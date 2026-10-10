@@ -34,26 +34,26 @@ XEmulUnpacker::OPTIONS XEmulUnpackerFatpack::getDefaultOptions() const
     OPTIONS options;
     // Fatpack uses intensive LZMA decompression, Import Resolving, and TLS initialization.
     // We need a significantly higher step limit to allow the emulated loader to finish.
-    options.nMaxSteps = 50000000; 
+    options.nMaxSteps = 50000000;
     return options;
 }
 
 bool XEmulUnpackerFatpack::matchOEP(const OEP_CONTEXT &c, const OPTIONS &options) const
 {
     Q_UNUSED(options)
-    
+
     // Fatpack is strictly an x64 packer. Do not attempt to match on 32-bit x86 code.
     if (!c.bIs64) {
         return false;
     }
 
-    // Since Fatpack is a Manual Mapper, the unpacked executable is placed in a newly 
+    // Since Fatpack is a Manual Mapper, the unpacked executable is placed in a newly
     // allocated VirtualAlloc memory block. These dynamic allocations reside in high memory.
     if (!c.bJumpToHigh) {
         return false;
     }
 
-    // In a 64-bit C/C++ Manual Mapper, executing the OEP function pointer usually 
+    // In a 64-bit C/C++ Manual Mapper, executing the OEP function pointer usually
     // compiles down to an indirect register call or jump.
     // Example: call rax, call rcx, jmp rdx.
 

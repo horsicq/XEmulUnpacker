@@ -39,8 +39,7 @@ protected:
 
     // Recover the stored absolute OEP from the stub's `add [P],eax; push [P]; ret` tail when the
     // (larger bcb) image faults in the aPLib depacker before that ret retires and matchOEP fires.
-    quint64 recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd,
-                             quint64 nImageBase, quint64 nImageSize) const override;
+    quint64 recoverOepAtStop(XEmuMemoryManager *pMemoryManager, quint64 nScanStart, quint64 nScanEnd, quint64 nImageBase, quint64 nImageSize) const override;
 };
 
 #endif  // XEMULUNPACKER_NPACK_H

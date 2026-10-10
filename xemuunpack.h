@@ -34,11 +34,11 @@ class XEmuUnpack {
 public:
     struct RESULT {
         bool bSuccess;
-        quint64 nOEP;        // recovered original entry point (RVA)
+        quint64 nOEP;  // recovered original entry point (RVA)
         quint64 nImageBase;
-        qint64 nSteps;       // instructions executed
-        QByteArray baPE;     // rebuilt PE (valid only if bSuccess)
-        QString sReason;     // stop reason / diagnostics
+        qint64 nSteps;    // instructions executed
+        QByteArray baPE;  // rebuilt PE (valid only if bSuccess)
+        QString sReason;  // stop reason / diagnostics
     };
 
     struct OPTIONS {
