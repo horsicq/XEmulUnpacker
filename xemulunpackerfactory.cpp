@@ -45,6 +45,7 @@
 #include "packers/xemulunpacker_pecompact.h"
 #include "packers/xemulunpacker_pefilepacker.h"
 #include "packers/xemulunpacker_pepacker_levanvn.h"
+#include "packers/xemulunpacker_peruntime.h"
 #include "packers/xemulunpacker_pespin.h"
 #include "packers/xemulunpacker_petite.h"
 #include "packers/xemulunpacker_pex.h"
@@ -107,6 +108,7 @@ const ENTRY g_entries[] = {
     {"PESpin", &make<XEmulUnpackerPESpin>},
     {"Petite", &make<XEmulUnpackerPetite>},
     {"PE Packer by levanvn", &make<XEmulUnpackerPEPackerLevanvn>},
+    {"PE Runtime Packer", &make<XEmulUnpackerPERuntime>},
     {"REVProt", &make<XEmulUnpackerRevProt>},
     {"troglodyte9", &make<XEmulUnpackerTroglodyte9>},
     {"Themida", &make<XEmulUnpackerThemida>},

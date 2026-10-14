@@ -96,6 +96,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_petite.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pepacker_levanvn.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_pepacker_levanvn.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_peruntime.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_peruntime.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_revprot.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_troglodyte9.cpp
