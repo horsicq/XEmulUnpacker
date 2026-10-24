@@ -40,6 +40,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_aspack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_armadillo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_armadillo.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_asmdead.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_asmdead.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_nspack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_nspack.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_winupack.cpp

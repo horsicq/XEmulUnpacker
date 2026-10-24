@@ -26,6 +26,7 @@
 #include "packers/xemulunpacker_alushpacker.h"
 #include "packers/xemulunpacker_aniko33.h"
 #include "packers/xemulunpacker_armadillo.h"
+#include "packers/xemulunpacker_asmdead.h"
 #include "packers/xemulunpacker_aspack.h"
 #include "packers/xemulunpacker_beroexepacker.h"
 #include "packers/xemulunpacker_eronana.h"
@@ -80,6 +81,7 @@ const ENTRY g_entries[] = {
     {"UPX", &make<XEmulUnpackerUPX>},
     {"ASPack", &make<XEmulUnpackerASPack>},
     {"Armadillo", &make<XEmulUnpackerArmadillo>},
+    {"ASmdead", &make<XEmulUnpackerASmdead>},
     {"NSPack", &make<XEmulUnpackerNSPack>},
     {"(Win)Upack", &make<XEmulUnpackerWinupack>},
     {"Fatpack (x64 LZMA Manual Mapper)", &make<XEmulUnpackerFatpack>},
