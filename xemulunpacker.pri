@@ -34,6 +34,7 @@ HEADERS += \
     $$PWD/packers/xemulunpacker_fishpepacker.h \
     $$PWD/packers/xemulunpacker_kkrunchy.h \
     $$PWD/packers/xemulunpacker_packman.h \
+    $$PWD/packers/xemulunpacker_qingqiz.h \
     $$PWD/packers/xemulunpacker_quickpacknt.h \
     $$PWD/packers/xemulunpacker_packedinfectedpe.h \
     $$PWD/packers/xemulunpacker_pefilepacker.h \
@@ -79,6 +80,7 @@ SOURCES += \
     $$PWD/packers/xemulunpacker_fishpepacker.cpp \
     $$PWD/packers/xemulunpacker_kkrunchy.cpp \
     $$PWD/packers/xemulunpacker_packman.cpp \
+    $$PWD/packers/xemulunpacker_qingqiz.cpp \
     $$PWD/packers/xemulunpacker_quickpacknt.cpp \
     $$PWD/packers/xemulunpacker_packedinfectedpe.cpp \
     $$PWD/packers/xemulunpacker_pefilepacker.cpp \

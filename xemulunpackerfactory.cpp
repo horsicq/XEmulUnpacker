@@ -50,6 +50,7 @@
 #include "packers/xemulunpacker_petite.h"
 #include "packers/xemulunpacker_pex.h"
 #include "packers/xemulunpacker_pinkiepie.h"
+#include "packers/xemulunpacker_qingqiz.h"
 #include "packers/xemulunpacker_quickpacknt.h"
 #include "packers/xemulunpacker_revprot.h"
 #include "packers/xemulunpacker_troglodyte9.h"
@@ -101,6 +102,7 @@ const ENTRY g_entries[] = {
     {"Fish PE Packer", &make<XEmulUnpackerFishPEPacker>},
     {"kkrunchy", &make<XEmulUnpackerKKrunchy>},
     {"Packman", &make<XEmulUnpackerPackman>},
+    {"QingQiz", &make<XEmulUnpackerQingQiz>},
     {"QuickPack NT", &make<XEmulUnpackerQuickPackNT>},
     {"Packed-Infected-PE", &make<XEmulUnpackerPackedInfectedPE>},
     {"PE-File-Packer (Chronoss3)", &make<XEmulUnpackerPEFilePacker>},

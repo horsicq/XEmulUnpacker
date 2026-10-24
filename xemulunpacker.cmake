@@ -84,6 +84,8 @@ set(XEMULUNPACKER_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_kkrunchy.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_packman.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_packman.h
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_qingqiz.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_qingqiz.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_quickpacknt.cpp
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_quickpacknt.h
     ${CMAKE_CURRENT_LIST_DIR}/packers/xemulunpacker_packedinfectedpe.cpp
