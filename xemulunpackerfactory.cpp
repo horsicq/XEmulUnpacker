@@ -29,6 +29,7 @@
 #include "packers/xemulunpacker_asmdead.h"
 #include "packers/xemulunpacker_aspack.h"
 #include "packers/xemulunpacker_beroexepacker.h"
+#include "packers/xemulunpacker_chameleos.h"
 #include "packers/xemulunpacker_eronana.h"
 #include "packers/xemulunpacker_exefog.h"
 #include "packers/xemulunpacker_exepack.h"
@@ -97,6 +98,7 @@ const ENTRY g_entries[] = {
     {"AlushPacker", &make<XEmulUnpackerAlushPacker>},
     {"Aniko33", &make<XEmulUnpackerAniko33>},
     {"BeRoEXEPacker", &make<XEmulUnpackerBeRoEXEPacker>},
+    {"Chameleos", &make<XEmulUnpackerChameleos>},
     {"Eronana Packer", &make<XEmulUnpackerEronana>},
     {"ExeFog", &make<XEmulUnpackerExeFog>},
     {"NeoLite", &make<XEmulUnpackerNeoLite>},
