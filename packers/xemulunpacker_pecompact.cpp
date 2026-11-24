@@ -32,8 +32,11 @@ QString XEmulUnpackerPECompact::getPackerName() const
 XEmulUnpacker::OPTIONS XEmulUnpackerPECompact::getDefaultOptions() const
 {
     OPTIONS options;
-    // PECompact 2.9x (e.g. 2.96.2) commonly uses LZMA codecs which need more steps than 1.x/aPLib.
-    options.nMaxSteps = 120000000;
+    // PECompact 2.9x/3.x (e.g. 3.00.2) commonly uses LZMA/LZMA2 codecs.
+    options.nMaxSteps = 150000000;
+    // Required for PEC2TO / merged-section builds (only .text + .rsrc) where
+    // both the stub and the unpacked OEP reside inside .text (same-section W^X hop).
+    options.bDetectWriteExec = true;
     return options;
 }
 
@@ -45,7 +48,7 @@ bool XEmulUnpackerPECompact::matchOEP(const OEP_CONTEXT &c, const OPTIONS &optio
     }
 
     if (c.bJumpFromHigh) {
-        // 1.00-1.10 'ret' (C3); 1.50-1.76 'ret 4' (C2 04 00); 2.x 'jmp eax' (FF E0).
+        // 1.00-1.10 'ret' (C3); 1.50-1.76 'ret 4' (C2 04 00); 2.x/3.x 'jmp eax' (FF E0).
         if ((c.nPrevSize == 1) && (c.prev8() == 0xC3)) {
             return true;
         }
@@ -57,7 +60,7 @@ bool XEmulUnpackerPECompact::matchOEP(const OEP_CONTEXT &c, const OPTIONS &optio
         }
     }
 
-    // 0.90: 'ret' (C3) or 2.x loader: 'jmp eax' (FF E0) from a VirtualAlloc heap buffer into the image.
+    // 0.90 'ret' (C3) or 2.x/3.x loader 'jmp eax' (FF E0) from a VirtualAlloc heap buffer into the image.
     if (c.bPrevIsHeap && c.bCurrIsImage) {
         if ((c.nPrevSize == 1) && (c.prev8() == 0xC3)) {
             return true;
@@ -67,14 +70,27 @@ bool XEmulUnpackerPECompact::matchOEP(const OEP_CONTEXT &c, const OPTIONS &optio
         }
     }
 
-    // 2.xx (including 2.96.2) fallback if the tail stub executes in the same section as OEP:
-    // After VirtualFree, PECompact 2.x computes OEP via `mov eax, [esi+0Ch]; add eax, ...` (8B 46 0C 03)
-    // shortly before transferring control with `jmp eax` (FF E0).
-    if (c.bCurrIsImage && (c.nPrevSize == 2) && (c.prev16() == 0xE0FF) && (c.nPrevAddress >= 32)) {
-        for (quint64 nOff = 4; nOff <= 32; nOff++) {
-            if (c.matchSignature(c.nPrevAddress - nOff, "8B460C03")) {
+    // PECompact 2.9x / 3.x (e.g. 3.00.2 PEC2TO) where the stub resides in .text itself
+    // and jumps into freshly decompressed code in the same section (triggered via bDetectWriteExec).
+    if (c.bCurrIsImage) {
+        // Tail jump via 'jmp eax' (FF E0)
+        if ((c.nPrevSize == 2) && (c.prev16() == 0xE0FF)) {
+            return true;
+        }
+
+        // Tail jump via 'push eax; ret' (50 C3) or 'push imm32; ret' (68 .. .. .. .. C3)
+        if ((c.nPrevSize == 1) && (c.prev8() == 0xC3)) {
+            if ((c.nPrevAddress >= 1) && c.matchSignature(c.nPrevAddress - 1, "50C3")) {
                 return true;
             }
+            if ((c.nPrevAddress >= 5) && c.matchSignature(c.nPrevAddress - 5, "68........C3")) {
+                return true;
+            }
+        }
+
+        // Direct patched tail jump 'jmp rel32' (E9 ..)
+        if ((c.nPrevSize == 5) && (c.prev8() == 0xE9)) {
+            return true;
         }
     }
 
